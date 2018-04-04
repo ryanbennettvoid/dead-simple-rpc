@@ -12,8 +12,7 @@ const DEFAULT_OPTIONS = {
 
 const Client = ( options ) => {
 
-  const _options = Object.assign( {}, DEFAULT_OPTIONS, options );
-  const { host, port, debug } = _options;
+  const { host, port, debug } = Object.assign( {}, DEFAULT_OPTIONS, options );
 
   return {
 
