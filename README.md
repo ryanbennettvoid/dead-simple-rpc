@@ -99,5 +99,5 @@ client.evoke( functionName, args )
 
 ``` js
 npm install -g tape
-tape ./test
+npm test
 ```
