@@ -2,6 +2,7 @@
 const Promise = require( 'bluebird' );
 const test = require( 'tape' );
 const rpc = require( '../index.js' );
+const fs = require( 'fs' );
 
 const options = {
   port: 9999,
@@ -18,6 +19,11 @@ test( 'create server', ( t ) => {
         setTimeout( () => {
           callback( null, a + b );
         }, 500 )
+      },
+      getBigData: ( { blob }, callback ) => {
+        const str = fs.readFileSync( './test/large-data.txt', 'utf8' );
+        if ( blob === str ) return callback( null, str );
+        return callback( 'blob mismatch' );
       }
     }
   } );
@@ -74,6 +80,31 @@ test( 'client connect to server and evoke method', ( t ) => {
 
     t.fail( err );
 
+  } )
+  .finally( () => {
+    t.end();
+  } )
+  ;
+
+} );
+
+test( 'large data', ( t ) => {
+
+  const clientOptions = Object.assign( {}, options );
+
+  const client = rpc.Client( clientOptions );
+
+  const str = fs.readFileSync( './test/large-data.txt', 'utf8' );
+
+  return client.evoke( 'getBigData', { blob: str } )
+  .then( ( { err, results } ) => {
+    t.notOk( err );
+    t.equals( results, str );
+    t.pass( 'fetched big data' );
+  } )
+  .catch( ( err ) => {
+    t.notOk( err );
+    t.fail( 'could not fetch big data' );
   } )
   .finally( () => {
     t.end();
@@ -193,6 +224,7 @@ test( 'close server', ( t ) => {
   } )
   .catch( ( err ) => {
     t.notOk( err );
+    t.fail();
   } )
   .finally( () => {
     t.end();

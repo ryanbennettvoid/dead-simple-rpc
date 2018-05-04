@@ -1,4 +1,6 @@
 
+const { MSG_DELIMITER } = require( './constants' );
+
 const helpers = {};
 
 helpers.parseSocketRequest = ( data ) => {
@@ -8,7 +10,7 @@ helpers.parseSocketRequest = ( data ) => {
   //   args: Object
   // }"
 
-  const message = JSON.parse( data.toString() ); // let it throw exception
+  const message = JSON.parse( data.toString().split( MSG_DELIMITER )[ 0 ] ); // let it throw exception
 
   const { 
     functionName,
@@ -30,7 +32,7 @@ helpers.parseSocketResponse = ( data ) => {
   //   results: Object
   // }"
 
-  const message = JSON.parse( data.toString() ); // let it throw exception
+  const message = JSON.parse( data.toString().split( MSG_DELIMITER )[ 0 ] ); // let it throw exception
 
   const { 
     timestamp_fn_start,

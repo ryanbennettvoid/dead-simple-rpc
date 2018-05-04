@@ -50,7 +50,7 @@ client.evoke( 'getMessage', { cake: 'isGood' } )
 **Server defaults**:
 ``` js
 const options = {
-  host: '127.0.0.1',
+  host: 'localhost',
   port: 7889,
   handlers: {}, // dictionary of functions
   debug: false // logging
